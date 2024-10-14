@@ -20,7 +20,7 @@ const CategoryItem = ({ category }) => {
         {categoryData.items.map((item, index) => (
           <li
             key={index}
-            className="flex items-center space-x-4 py-2 text-gray-200 hover:text-red-500 transition duration-300 cursor-pointer"
+            className="flex items-center space-x-4 py-1.5 text-gray-200 hover:text-red-500 transition duration-300 cursor-pointer"
           >
             {/* Placeholder for icon */}
             <img src={item.icon} className="w-5 h-5"></img>
