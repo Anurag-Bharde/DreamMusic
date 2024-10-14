@@ -11,12 +11,13 @@ function App() {
 
   return (
     <>
-      <div className='grid grid-cols-20'>
-      <div className='col-span-4'>{<NavSideBar />}</div>
-      <div className='col-span-12 bg-gradient-to-b from-dark-red to-black'>{<MainBar />}</div>
-      <div className='col-span-4 h-screen  bg-gradient-to-b from-black-red to-black'>{<SideBar />}</div>
-      </div>
-    </>
+  <div className='grid grid-cols-20 h-screen'>
+    <div className='col-span-4'>{<NavSideBar />}</div>
+    <div className='col-span-12 h-full overflow-hidden bg-gradient-to-b from-dark-red to-black'>{<MainBar />}</div>
+    <div className='col-span-4 h-screen bg-gradient-to-b from-black-red to-black'>{<SideBar />}</div>
+  </div>
+</>
+
   )
 }
 
