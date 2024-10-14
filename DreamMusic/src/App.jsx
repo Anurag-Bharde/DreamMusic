@@ -11,10 +11,10 @@ function App() {
 
   return (
     <>
-      <div className='grid grid-cols-12'>
-      <div className='col-span-2'>{<NavSideBar />}</div>
-      <div className='col-span-8 bg-gradient-to-b from-dark-red to-black'>{<MainBar />}</div>
-      <div className='col-span-2 h-screen  bg-gradient-to-b from-black-red to-black'>{<SideBar />}</div>
+      <div className='grid grid-cols-20'>
+      <div className='col-span-4'>{<NavSideBar />}</div>
+      <div className='col-span-12 bg-gradient-to-b from-dark-red to-black'>{<MainBar />}</div>
+      <div className='col-span-4 h-screen  bg-gradient-to-b from-black-red to-black'>{<SideBar />}</div>
       </div>
     </>
   )
