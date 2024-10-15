@@ -1,58 +1,67 @@
-import React, { useEffect, useState, useContext } from 'react';
-import songs from './Data/SongsData'; // Import the songs data
+import React, { useContext } from 'react';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { MusicContext } from './Context/ContextProvider';
 
 const SongList = () => {
-  const { setSelectSong } = useContext(MusicContext);
-  const [activeSongId, setActiveSongId] = useState(null);
-
-  // Set the default song to the first one on the list
-  useEffect(() => {
-    if (songs.length > 0) {
-      setSelectSong(songs[0]);  // Set the first song as the default
-      setActiveSongId(songs[0].id);  // Highlight the first song
-    }
-  }, [setSelectSong]);
+  const { Songs, setSelectSong, selectSong } = useContext(MusicContext);
 
   const handleSongSelect = (song) => {
-    setActiveSongId(song.id); // Highlight selected song
-    setSelectSong(song);      // Set the selected song for the player
+    setSelectSong(song);
   };
 
-  return (
-    <div className="w-full pt-2">
-      <div className='flex justify-between mb-4 px-4 sm:px-8 md:px-16 lg:px-24'>
+  const truncate = (str, n) => {
+    return str.length > n ? str.substr(0, n-1) + '...' : str;
+  };
+
+   return (
+    <div className="w-full pt-2 px-4 sm:px-8 md:px-16 lg:px-20">
+      <div className='flex justify-between mb-4'>
         <h2 className="text-white text-lg">Popular</h2>
         <h2 className="text-white text-lg">See All</h2>
       </div>
-      <ul className="">
-        {songs.map((song, index) => (
-          <li 
-            key={song.id}
-            onClick={() => handleSongSelect(song)}
-            className={`group cursor-pointer 
-              ${activeSongId === song.id ? 'bg-red-700' : 'hover:bg-[#520000]'}
-            `}
-          >
-            <div className="px-4 sm:px-8 md:px-16 lg:px-10">
-              <div className="flex justify-between items-center py-0.5">
-                <div className="flex items-center space-x-2">
-                  <span className="text-white w-6">{index + 1}</span>
-                  <img 
-                    src={song.cover} 
-                    alt={song.title} 
-                    className="w-12 h-12 object-cover rounded" 
-                  />
-                  <span className="text-white">{song.title}</span>
-                </div>
-                <div className="text-gray-400">
-                  {song.time}
-                </div>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className="grid grid-cols-12 gap-4 text-white text-sm font-bold mb-1">
+        <div className="col-span-1">#</div>
+        <div className="col-span-4">TITLE</div>
+        <div className="col-span-3">PLAYING</div>
+        <div className="col-span-2">TIME</div>
+        <div className="col-span-2">ALBUM</div>
+      </div>
+      <Droppable droppableId="songs">
+        {(provided) => (
+          <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+            {Songs.map((song, index) => (
+              <Draggable key={song.id.toString()} draggableId={song.id.toString()} index={index}>
+                {(provided, snapshot) => (
+                  <li
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    onClick={() => handleSongSelect(song)}
+                    className={`grid grid-cols-12 gap-4 items-center py-1 px-2 rounded
+                      ${selectSong?.id === song.id ? 'bg-red-900' : 'hover:bg-[#520000]'}
+                      ${snapshot.isDragging ? 'bg-gray-700' : ''}
+                    `}
+                  >
+                    <span className="col-span-1 text-gray-400">{index + 1}</span>
+                    <div className="col-span-4 flex items-center space-x-2">
+                      <img 
+                        src={song.cover} 
+                        alt={song.title} 
+                        className="w-10 h-10 object-cover rounded" 
+                      />
+                      <span className="text-white truncate">{truncate(song.title, 20)}</span>
+                    </div>
+                    <span className="col-span-3 text-gray-400 truncate">{song.playing}</span>
+                    <span className="col-span-2 text-gray-400">{song.time}</span>
+                    <span className="col-span-2 text-gray-400 truncate">{truncate(song.album, 15)}</span>
+                  </li>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </ul>
+        )}
+      </Droppable>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import MusicPlayer from "./MusicPlayer"
 import SongList from "./SongList"
 import { useContext, useState } from "react";
 import { MusicContext } from "./Context/ContextProvider";
+import { Notify } from "./Notify";
 
 
 export function SideBar(){
@@ -12,9 +13,9 @@ export function SideBar(){
 
 return (
     <div className='h-screen  bg-gradient-to-b from-black-red to-black'>
-        <div className=" h-screen">
-      
 
+    <Notify />
+        <div className=" h-screen">
       <div className=" p-4 bg-black-red">
         <MusicPlayer selectedSong={selectSong} setPlay={setPlaying}/>
       </div>
