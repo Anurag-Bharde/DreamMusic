@@ -1,21 +1,22 @@
 import MusicPlayer from "./MusicPlayer"
 import SongList from "./SongList"
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { MusicContext } from "./Context/ContextProvider";
+
 
 export function SideBar(){
     const [selectedSong, setSelectedSong] = useState(null);
+    const {selectSong,setPlaying}=useContext(MusicContext)
+
+    // console.log(PlayNow)
 
 return (
     <div className='h-screen  bg-gradient-to-b from-black-red to-black'>
-        <div className="grid grid-cols-12 h-screen">
-      {/* Song list section */}
-      <div className="col-span-8 p-4 bg-black">
-        <SongList setSelectedSong={setSelectedSong} />
-      </div>
+        <div className=" h-screen">
       
-      {/* Music player section */}
-      <div className="col-span-4 p-4 bg-black-red">
-        <MusicPlayer selectedSong={selectedSong} />
+
+      <div className=" p-4 bg-black-red">
+        <MusicPlayer selectedSong={selectSong} setPlay={setPlaying}/>
       </div>
     </div>
     </div>

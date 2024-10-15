@@ -1,50 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Howl } from 'howler';
+import { MusicContext } from './Context/ContextProvider';
 
-const MusicPlayer = ({ selectedSong }) => {
+const MusicPlayer = () => {
+  const { selectSong, isPlaying, setIsPlaying } = useContext(MusicContext);
   const [sound, setSound] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    if (selectedSong) {
-      // If there is an already playing sound, stop it
-      if (sound) sound.stop();
+    if (selectSong) {
+      if (sound) sound.stop(); // Stop current song if playing
       
-      // Create a new Howler sound instance
+      // Load and play the new song
       const newSound = new Howl({
-        src: [selectedSong.src],
-        html5: true,
+        src: [selectSong.src],
+        html5: true, 
       });
       setSound(newSound);
-      setIsPlaying(true);
-      newSound.play();
     }
-  }, [selectedSong]);
+  }, [selectSong]);
 
-  const togglePlayPause = () => {
+  useEffect(() => {
     if (sound) {
       if (isPlaying) {
-        sound.pause();
-      } else {
         sound.play();
+      } else {
+        sound.pause();
       }
-      setIsPlaying(!isPlaying);
     }
+  }, [isPlaying, sound]);
+
+  const togglePlayPause = () => {
+    setIsPlaying(!isPlaying);
   };
 
-  if (!selectedSong) return <div className="text-white">Select a song to play</div>;
+  if (!selectSong) return <div className="text-white">Select a song to play</div>;
 
   return (
     <div className="p-4 bg-red-900 rounded-lg">
       <h3 className="text-white text-lg mb-2">Now Playing</h3>
       <img 
-        src={selectedSong.cover} 
-        alt={selectedSong.title} 
+        src={selectSong.cover} 
+        alt={selectSong.title} 
         className="w-full h-40 object-cover mb-4 rounded-lg"
       />
       <div className="text-white mb-2">
-        <span className="text-xl">{selectedSong.title}</span> <br />
-        <span className="text-gray-400">{selectedSong.artist}</span>
+        <span className="text-xl">{selectSong.title}</span> <br />
+        <span className="text-gray-400">{selectSong.artist}</span>
       </div>
       <div className="flex justify-between items-center mt-4">
         {/* Player controls */}

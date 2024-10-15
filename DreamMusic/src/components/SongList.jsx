@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import songs from './Data/SongsData'; // Import the songs data
+import { MusicContext } from './Context/ContextProvider';
 
-const SongList = ({ setSelectedSong }) => {
+const SongList = () => {
+  const { setSelectSong } = useContext(MusicContext);
   const [activeSongId, setActiveSongId] = useState(null);
+
+  // Set the default song to the first one on the list
+  useEffect(() => {
+    if (songs.length > 0) {
+      setSelectSong(songs[0]);  // Set the first song as the default
+      setActiveSongId(songs[0].id);  // Highlight the first song
+    }
+  }, [setSelectSong]);
 
   const handleSongSelect = (song) => {
     setActiveSongId(song.id); // Highlight selected song
-    setSelectedSong(song); // Set the selected song for the player
-    console.log(song)
+    setSelectSong(song);      // Set the selected song for the player
   };
-
 
   return (
     <div className="w-full pt-2">
@@ -46,8 +54,6 @@ const SongList = ({ setSelectedSong }) => {
         ))}
       </ul>
     </div>
-
-
   );
 };
 
