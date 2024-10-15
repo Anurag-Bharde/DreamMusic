@@ -7,39 +7,47 @@ const SongList = ({ setSelectedSong }) => {
   const handleSongSelect = (song) => {
     setActiveSongId(song.id); // Highlight selected song
     setSelectedSong(song); // Set the selected song for the player
+    console.log(song)
   };
 
+
   return (
-    <div className="w-full px-10 pt-2 relative">
-    <div className='flex justify-between'>
-      <h2 className="text-white text-lg mb-4">Popular</h2>
-      <h2 className="text-white text-lg mb-4">See All</h2>
+    <div className="w-full pt-2">
+      <div className='flex justify-between mb-4 px-4 sm:px-8 md:px-16 lg:px-24'>
+        <h2 className="text-white text-lg">Popular</h2>
+        <h2 className="text-white text-lg">See All</h2>
       </div>
       <ul className="">
         {songs.map((song, index) => (
           <li 
             key={song.id}
             onClick={() => handleSongSelect(song)}
-            className={`flex justify-between items-center p-0.5 cursor-pointer 
-              ${activeSongId === song.id ? 'bg-red-700' : 'hover:bg-[#520000] hover:absolute left-0 right-0 w-full transition-opacity'}
+            className={`group cursor-pointer 
+              ${activeSongId === song.id ? 'bg-red-700' : 'hover:bg-[#520000]'}
             `}
           >
-            <div className="flex items-center space-x-2">
-              <span className="text-white">{index + 1}</span>
-              <img 
-                src={song.cover} 
-                alt={song.title} 
-                className="w-12 h-12 object-cover rounded" 
-              />
-              <span className="text-white">{song.title}</span>
-            </div>
-            <div className="text-gray-400">
-              {song.time}
+            <div className="px-4 sm:px-8 md:px-16 lg:px-10">
+              <div className="flex justify-between items-center py-0.5">
+                <div className="flex items-center space-x-2">
+                  <span className="text-white w-6">{index + 1}</span>
+                  <img 
+                    src={song.cover} 
+                    alt={song.title} 
+                    className="w-12 h-12 object-cover rounded" 
+                  />
+                  <span className="text-white">{song.title}</span>
+                </div>
+                <div className="text-gray-400">
+                  {song.time}
+                </div>
+              </div>
             </div>
           </li>
         ))}
       </ul>
     </div>
+
+
   );
 };
 
