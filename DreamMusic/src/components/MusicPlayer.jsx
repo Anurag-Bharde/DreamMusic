@@ -71,6 +71,7 @@ const MusicPlayer = () => {
       setCurrentTime(newTime); // Update the current time state
     }
   };
+  
 
   const nextSong = () => {
     const currentIndex = Songs.findIndex(song => song.id === selectSong.id);
@@ -93,27 +94,41 @@ const MusicPlayer = () => {
   if (!selectSong) return <div className="text-white">Select a song to play</div>;
 
   return (
+    <div className='px-8 pt-4'>
     <div className="p-4 bg-red-900 rounded-lg">
-      <h3 className="text-white text-lg mb-2">Now Playing</h3>
+      <h3 className="text-white text-lg mb-1">Now Playing</h3>
       <img 
         src={selectSong.cover} 
         alt={selectSong.title} 
-        className="w-full h-40 object-cover mb-4 rounded-lg"
+        className="w-full h-28 px-2 object-cover object-top mb-4 rounded-lg"
       />
       <div className="text-white mb-2">
-        <span className="text-xl">{selectSong.title}</span> <br />
-        <span className="text-gray-400">{selectSong.artist}</span>
+        <span className="text-lg">{selectSong.title}</span> <br />
+        
+        <span className="text-gray-400 text-md">{selectSong.artist}</span>
       </div>
-      <div className="text-white mb-2">
-        <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
-      </div>
-      <div className="w-full bg-gray-600 rounded h-2 mb-4" onClick={handleProgressClick}>
-  <div 
-    className="bg-red-500 h-full" 
-    style={{ width: `${(currentTime / duration) * 100}%` }}
-  />
+      <div className="text-white flex justify-between items-center">
+  <span>{formatTime(currentTime)}</span>
+  
+  <div className="relative w-full bg-gray-600 rounded h-1" onClick={handleProgressClick}>
+    {/* Progress bar background */}
+    <div 
+      className="bg-red-500 h-full" 
+      style={{ width: `${(currentTime / duration) * 100}%` }}
+    />
+    
+    {/* Circle pointer */}
+    <div
+      className="absolute top-1/2 transform -translate-y-1/2 bg-red-500 w-3 h-3 rounded-full"
+      style={{ left: `${(currentTime / duration) * 100}%` }}
+    />
+  </div>
+  
+  <span>{formatTime(duration)}</span>
 </div>
-      <div className="flex justify-between items-center mt-4">
+
+     
+      <div className="flex justify-between items-center mt-1">
         <button onClick={prevSong} className="text-white hover:text-gray-300">⏮</button>
         <button 
           onClick={togglePlayPause}
@@ -122,6 +137,7 @@ const MusicPlayer = () => {
         </button>
         <button onClick={nextSong} className="text-white hover:text-gray-300">⏭</button>
       </div>
+    </div>
     </div>
   );
 };
