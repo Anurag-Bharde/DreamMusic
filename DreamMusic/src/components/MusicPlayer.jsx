@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Howl } from 'howler';
 import { MusicContext } from './Context/ContextProvider';
 import playIcon from './Images/MusicPlayer/play.png';
-import pauseIcon from './Images/MusicPlayer/pause1.png';
+import pauseIcon from './Images/MusicPlayer/pause3.png';
+import nextt from './Images/MusicPlayer/next.png';
+import prev from './Images/MusicPlayer/prev.png';
 
 const MusicPlayer = () => {
   const { selectSong, isPlaying, setIsPlaying, Songs, setSelectSong } = useContext(MusicContext);
@@ -83,6 +85,7 @@ const MusicPlayer = () => {
     setSelectSong(Songs[prevIndex]);
   };
 
+  
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -93,17 +96,18 @@ const MusicPlayer = () => {
 
   return (
     <div className="px-8 pt-4">
-      <div className="px-4 pt-2 bg-[#6b0000] rounded-lg">
-        <h3 className="text-white text-lg mb-1">Now Playing</h3>
+      <div className="px-4 pt-2 pb-2 bg-[#6b0000] rounded-lg">
+        <h3 className="text-white text-lg text-center mb-1">Now Playing</h3>
         <img 
           src={selectSong.cover} 
           alt={selectSong.title} 
-          className="w-full h-28 px-2 object-cover object-top mb-4 rounded-lg"
+          className="w-full h-32 px-2 object-cover object-top mb-2 rounded-3xl"
         />
-        <div className="text-white mb-2">
-          <span className="text-lg truncate overflow-hidden">{selectSong.title}</span> <br />
-          <span className="text-gray-400 text-md">{selectSong.artist}</span>
-        </div>
+        <div className="text-white mb-2 text-center">
+  <span className="text-lg w-full truncate block overflow-hidden">{selectSong.title}</span> 
+  <span className="text-gray-400 text-md block">{selectSong.artist}</span>
+</div>
+
         
         {/* Progress Bar */}
         <div className="text-white flex justify-between items-center">
@@ -125,7 +129,7 @@ const MusicPlayer = () => {
         
         {/* Play/Pause and Next/Previous Controls */}
         <div className="flex justify-between items-center mt-1">
-          <button onClick={prevSong} className="text-white hover:text-gray-300">⏮</button>
+          <button onClick={prevSong} className="text-white hover:text-gray-300 h-6 w-6"><img src={prev} /></button>
           <button onClick={togglePlayPause} className="text-white hover:text-gray-300">
             <img 
               src={isPlaying ? pauseIcon : playIcon} 
@@ -133,7 +137,7 @@ const MusicPlayer = () => {
               className="w-6 h-6"
             />
           </button>
-          <button onClick={nextSong} className="text-white hover:text-gray-300">⏭</button>
+          <button onClick={nextSong} className="text-white hover:text-gray-300 h-6 w-6"><img src={nextt} /></button>
         </div>
       </div>
     </div>

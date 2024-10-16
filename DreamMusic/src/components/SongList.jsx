@@ -3,7 +3,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { MusicContext } from './Context/ContextProvider';
 
 const SongList = () => {
-  const { Songs, setSelectSong, selectSong } = useContext(MusicContext);
+  const { Songs, setSelectSong, selectSong, setIsPlaying } = useContext(MusicContext);
 
   useEffect(() => {
     // Log the Songs array to check its structure
@@ -12,6 +12,7 @@ const SongList = () => {
 
   const handleSongSelect = (song) => {
     setSelectSong(song);
+    setIsPlaying(true); // Start playing immediately when a song is selected
   };
 
   const truncate = (str, n) => {
@@ -32,22 +33,19 @@ const SongList = () => {
         <div className="col-span-2">ALBUM</div>
       </div>
       <Droppable droppableId="songs">
-        {(provided) => (
-          <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
-            {Songs.map((song, index) => {
-              const id = song.id?.toString() || `song-${index}`;
-              console.log(`Rendering song with id: ${id}`);
-              return (
-                <Draggable key={id} draggableId={id} index={index}>
-                  {(provided, snapshot) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      onClick={() => handleSongSelect(song)}
-                      className={`grid grid-cols-12 gap-4 items-center py-1 px-2 rounded
-                        ${selectSong?.id === song.id ? 'bg-red-900' : 'hover:bg-[#520000]'}
-                        ${snapshot.isDragging ? 'bg-gray-700' : ''}
+      {(provided) => (
+        <ul {...provided.droppableProps} ref={provided.innerRef} className="space-y-2">
+          {Songs.map((song, index) => (
+            <Draggable key={song.id.toString()} draggableId={song.id.toString()} index={index}>
+              {(provided, snapshot) => (
+                <li
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  onClick={() => handleSongSelect(song)}
+                  className={`grid grid-cols-12 gap-4 items-center py-1 px-2 rounded
+                    ${selectSong?.id === song.id ? 'bg-red-900' : 'hover:bg-[#520000]'}
+                    ${snapshot.isDragging ? 'bg-gray-700' : ''}
                       `}
                     >
                       <span className="col-span-1 text-gray-400">{index + 1}</span>
@@ -65,8 +63,8 @@ const SongList = () => {
                     </li>
                   )}
                 </Draggable>
-              );
-            })}
+              )
+            )}
             {provided.placeholder}
           </ul>
         )}
