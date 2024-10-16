@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Howl } from 'howler';
 import { MusicContext } from './Context/ContextProvider';
+import playIcon from './Images/MusicPlayer/play.png';
+import pauseIcon from './Images/MusicPlayer/pause1.png';
 
 const MusicPlayer = () => {
   const { selectSong, isPlaying, setIsPlaying, Songs, setSelectSong } = useContext(MusicContext);
@@ -10,42 +12,40 @@ const MusicPlayer = () => {
 
   useEffect(() => {
     if (selectSong) {
+      // Stop and unload the previous sound if it exists
       if (sound) {
         sound.stop();
-        sound.off('end'); 
+        sound.off('end');
       }
-  
+
+      // Initialize the new sound with Howl
       const newSound = new Howl({
         src: [selectSong.src],
         html5: true,
         onload: () => {
           setDuration(newSound.duration());
         },
+        onend: () => {
+          const currentIndex = Songs.findIndex(song => song.id === selectSong.id);
+          const nextIndex = (currentIndex + 1) % Songs.length; // Loop to the first song
+          setSelectSong(Songs[nextIndex]); // Change to the next song
+        },
       });
-  
+
       setSound(newSound);
-      newSound.play();
-      setIsPlaying(true);
-  
+
+      // Update the current time of the song every second
       const updateTime = setInterval(() => {
-        if (isPlaying) {
+        if (isPlaying && newSound) {
           setCurrentTime(newSound.seek());
         }
       }, 1000);
-  
-      newSound.on('end', () => {
-        const currentIndex = Songs.findIndex(song => song.id === selectSong.id);
-        const nextIndex = (currentIndex + 1) % Songs.length; // Loop to the first song
-        setSelectSong(Songs[nextIndex]); // Change to the next song
-      });
-  
+
       return () => {
         clearInterval(updateTime);
       };
     }
-  }, [selectSong, isPlaying]);
-  
-  
+  }, [selectSong]);
 
   const togglePlayPause = () => {
     if (sound) {
@@ -57,7 +57,6 @@ const MusicPlayer = () => {
       setIsPlaying(prev => !prev); // Toggle the playing state
     }
   };
-  
 
   const handleProgressClick = (event) => {
     if (sound) {
@@ -66,12 +65,11 @@ const MusicPlayer = () => {
       const offsetX = event.clientX - rect.left; // Click position relative to the progress bar
       const newWidth = rect.width; // Width of the progress bar
       const newTime = (offsetX / newWidth) * duration; // Calculate new time based on click position
-  
+
       sound.seek(newTime); // Seek to the new time
       setCurrentTime(newTime); // Update the current time state
     }
   };
-  
 
   const nextSong = () => {
     const currentIndex = Songs.findIndex(song => song.id === selectSong.id);
@@ -94,50 +92,50 @@ const MusicPlayer = () => {
   if (!selectSong) return <div className="text-white">Select a song to play</div>;
 
   return (
-    <div className='px-8 pt-4'>
-    <div className="p-4 bg-red-900 rounded-lg">
-      <h3 className="text-white text-lg mb-1">Now Playing</h3>
-      <img 
-        src={selectSong.cover} 
-        alt={selectSong.title} 
-        className="w-full h-28 px-2 object-cover object-top mb-4 rounded-lg"
-      />
-      <div className="text-white mb-2">
-        <span className="text-lg">{selectSong.title}</span> <br />
+    <div className="px-8 pt-4">
+      <div className="px-4 pt-2 bg-[#6b0000] rounded-lg">
+        <h3 className="text-white text-lg mb-1">Now Playing</h3>
+        <img 
+          src={selectSong.cover} 
+          alt={selectSong.title} 
+          className="w-full h-28 px-2 object-cover object-top mb-4 rounded-lg"
+        />
+        <div className="text-white mb-2">
+          <span className="text-lg truncate overflow-hidden">{selectSong.title}</span> <br />
+          <span className="text-gray-400 text-md">{selectSong.artist}</span>
+        </div>
         
-        <span className="text-gray-400 text-md">{selectSong.artist}</span>
+        {/* Progress Bar */}
+        <div className="text-white flex justify-between items-center">
+          <span className='pr-1'>{formatTime(currentTime)}</span>
+          <div className="relative w-full bg-[#b07b7b] rounded-full h-1" onClick={handleProgressClick}>
+            {/* Progress bar background */}
+            <div 
+              className="bg-[#f5f5f5] h-full rounded-full" 
+              style={{ width: `${(currentTime / duration) * 100}%` }}
+            />
+            {/* Circle pointer */}
+            <div
+              className="absolute top-1/2 transform -translate-y-1/2 bg-[#f5f5f5] w-3 h-3 rounded-full"
+              style={{ left: `${(currentTime / duration) * 100}%` }}
+            />
+          </div>
+          <span className='pl-1'>{formatTime(duration)}</span>
+        </div>
+        
+        {/* Play/Pause and Next/Previous Controls */}
+        <div className="flex justify-between items-center mt-1">
+          <button onClick={prevSong} className="text-white hover:text-gray-300">⏮</button>
+          <button onClick={togglePlayPause} className="text-white hover:text-gray-300">
+            <img 
+              src={isPlaying ? pauseIcon : playIcon} 
+              alt={isPlaying ? 'Pause' : 'Play'} 
+              className="w-6 h-6"
+            />
+          </button>
+          <button onClick={nextSong} className="text-white hover:text-gray-300">⏭</button>
+        </div>
       </div>
-      <div className="text-white flex justify-between items-center">
-  <span>{formatTime(currentTime)}</span>
-  
-  <div className="relative w-full bg-gray-600 rounded h-1" onClick={handleProgressClick}>
-    {/* Progress bar background */}
-    <div 
-      className="bg-red-500 h-full" 
-      style={{ width: `${(currentTime / duration) * 100}%` }}
-    />
-    
-    {/* Circle pointer */}
-    <div
-      className="absolute top-1/2 transform -translate-y-1/2 bg-red-500 w-3 h-3 rounded-full"
-      style={{ left: `${(currentTime / duration) * 100}%` }}
-    />
-  </div>
-  
-  <span>{formatTime(duration)}</span>
-</div>
-
-     
-      <div className="flex justify-between items-center mt-1">
-        <button onClick={prevSong} className="text-white hover:text-gray-300">⏮</button>
-        <button 
-          onClick={togglePlayPause}
-          className="text-white hover:text-gray-300">
-          {isPlaying ? '⏸' : '⏯'}
-        </button>
-        <button onClick={nextSong} className="text-white hover:text-gray-300">⏭</button>
-      </div>
-    </div>
     </div>
   );
 };
