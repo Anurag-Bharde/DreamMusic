@@ -6,6 +6,7 @@ import { SideBar } from './components/SIdeBar'
 import { NavSideBar } from './components/NavSideBar'
 import { MainBar } from './components/MainBar'
 import {MyContextProvider} from'./components/Context/ContextProvider'
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,6 +14,7 @@ function App() {
   return (
     <>
     <MyContextProvider>
+    <Analytics />
   <div className='grid grid-cols-20 h-screen'>
     <div className='col-span-4'>{<NavSideBar />}</div>
     <div className='col-span-12 h-full overflow-hidden bg-gradient-to-b from-dark-red to-black'>{<MainBar />}</div>
